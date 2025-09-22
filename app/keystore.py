@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 
-from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 
 
 @dataclass(frozen=True)
@@ -63,7 +63,9 @@ class KeyStore:
         active = self.get_active_keys()
         if not active:
             # If no active keys exist, create a new one valid for 2 hours.
-            new_key = self._generate_keypair(expires_at=datetime.now(timezone.utc) + timedelta(hours=2))
+            new_key = self._generate_keypair(
+                expires_at=datetime.now(timezone.utc) + timedelta(hours=2)
+            )
             with self._lock:
                 self._keys.append(new_key)
             return new_key
@@ -73,7 +75,9 @@ class KeyStore:
         expired = self.get_expired_keys()
         if not expired:
             # If no expired keys exist, create one that expired 1 hour ago.
-            new_expired = self._generate_keypair(expires_at=datetime.now(timezone.utc) - timedelta(hours=1))
+            new_expired = self._generate_keypair(
+                expires_at=datetime.now(timezone.utc) - timedelta(hours=1)
+            )
             with self._lock:
                 self._keys.append(new_expired)
             return new_expired

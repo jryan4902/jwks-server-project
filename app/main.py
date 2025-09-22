@@ -7,7 +7,7 @@ import jwt
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 
-from .keystore import keystore, KeyPair
+from .keystore import KeyPair, keystore
 from .util import public_key_to_jwk
 
 ALGORITHM = "RS256"
@@ -18,7 +18,9 @@ app = FastAPI(title="JWKS Server", version="1.0.0")
 @app.get("/.well-known/jwks.json")
 def jwks() -> Dict[str, List[Dict[str, str]]]:
     keys = keystore.get_active_keys()
-    jwks_keys = [public_key_to_jwk(k.public_key, k.kid, alg=ALGORITHM) for k in keys]
+    jwks_keys = [
+        public_key_to_jwk(k.public_key, k.kid, alg=ALGORITHM) for k in keys
+    ]
     return {"keys": jwks_keys}
 
 
@@ -28,7 +30,11 @@ def auth(expired: Optional[str] = Query(default=None)) -> JSONResponse:
     # signed with an expired key and with an expired 'exp' claim.
     use_expired = expired is not None
 
-    keypair: KeyPair = keystore.get_latest_expired_key() if use_expired else keystore.get_latest_active_key()
+    keypair: KeyPair = (
+        keystore.get_latest_expired_key()
+        if use_expired
+        else keystore.get_latest_active_key()
+    )
 
     now = datetime.now(timezone.utc)
     exp = keypair.expires_at  # Tokens expire at the same time as their signing key.
@@ -43,7 +49,9 @@ def auth(expired: Optional[str] = Query(default=None)) -> JSONResponse:
     headers = {"kid": keypair.kid, "alg": ALGORITHM}
 
     try:
-        token = jwt.encode(payload, keypair.private_pem(), algorithm=ALGORITHM, headers=headers)
+        token = jwt.encode(
+            payload, keypair.private_pem(), algorithm=ALGORITHM, headers=headers
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Token generation failed: {e}")
 
