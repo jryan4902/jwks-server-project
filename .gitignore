@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyo
+*.pyd
+*.env
+.env
+.venv/
+venv/
+pip-wheel-metadata/
+*.sqlite3
+
+# Test and coverage
+.coverage
+htmlcov/
+.tox/
+.cache/
+.pytest_cache/
+.mypy_cache/
+*.log
+
+# IDEs/editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.bak
+*.tmp
