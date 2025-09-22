@@ -39,3 +39,7 @@ make test
 make lint
 make format
 ```
+
+## Screenshots
+
+![Test](docs/test-client-and-coverage.png)
