@@ -40,6 +40,6 @@ make lint
 make format
 ```
 
-## Screenshots
+## Screenshot
 
-![Test](docs/test-client-and-coverage.png)
+![Test](./docs/test-screenshot.png)
