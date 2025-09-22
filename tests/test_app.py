@@ -1,3 +1,10 @@
+'''
+Jake Gonzales
+Sep 21st
+Assisted with copilot
+file to run tests against the app
+'''
+
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -103,7 +110,7 @@ def test_auth_with_expired_param_uses_expired_key_and_expired_exp():
         jwt.decode(token, key=expired_key.public_key, algorithms=[ALGORITHM])
     except ExpiredSignatureError as e:
         error = e
-    except InvalidTokenError as e:  # Accept generic if timing differences occur
+    except InvalidTokenError as e:  
         error = e
     assert error is not None
 

@@ -1,3 +1,10 @@
+'''
+Jake Gonzales 
+Sep 19
+Assisted with copilot
+
+'''
+
 from __future__ import annotations
 
 import threading
@@ -62,7 +69,7 @@ class KeyStore:
     def get_latest_active_key(self) -> KeyPair:
         active = self.get_active_keys()
         if not active:
-            # If no active keys exist, create a new one valid for 2 hours.
+            # If no active keys exist create a new one valid for 2 hours.
             new_key = self._generate_keypair(
                 expires_at=datetime.now(timezone.utc) + timedelta(hours=2)
             )
@@ -74,7 +81,7 @@ class KeyStore:
     def get_latest_expired_key(self) -> KeyPair:
         expired = self.get_expired_keys()
         if not expired:
-            # If no expired keys exist, create one that expired 1 hour ago.
+            # If no expired keys exist, create one that expired an hour ago.
             new_expired = self._generate_keypair(
                 expires_at=datetime.now(timezone.utc) - timedelta(hours=1)
             )

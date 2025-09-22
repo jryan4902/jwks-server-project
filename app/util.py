@@ -1,3 +1,11 @@
+'''
+Jake Gonzales 
+Sep 19
+Assisted with copilot
+
+'''
+
+
 from __future__ import annotations
 
 import base64
