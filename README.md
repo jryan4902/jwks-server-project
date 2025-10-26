@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS keys(
 ### Project 2
 
 #### Gradebot Test Results (Project 2)
-![Gradebot Results](./docs/gradebot-project2.png)
+![Gradebot Results](./docs/project2-gradebot.png)
 
 #### Test Coverage
-![Test Coverage](test-coverage-project2.png)
+![Test Coverage](./docs/project2-tests.png)
