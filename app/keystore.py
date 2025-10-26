@@ -1,9 +1,9 @@
-'''
+"""
 Jake Gonzales 
 Sep 19
 Assisted with copilot
 
-'''
+"""
 
 from __future__ import annotations
 
@@ -52,52 +52,36 @@ class KeyStore:
 
         # Generate expired key if none exists
         if not expired_keys:
-            self._generate_and_save_keypair(
-                expires_at=now - timedelta(hours=1)
-            )
+            self._generate_and_save_keypair(expires_at=now - timedelta(hours=1))
 
         # Generate active key if none exists
         if not valid_keys:
-            self._generate_and_save_keypair(
-                expires_at=now + timedelta(hours=2)
-            )
+            self._generate_and_save_keypair(expires_at=now + timedelta(hours=2))
 
     def _generate_and_save_keypair(self, *, expires_at: datetime) -> KeyPair:
         """Generate a new keypair and save it to the database."""
         # Generate RSA key pair
-        private_key = rsa.generate_private_key(
-            public_exponent=65537,
-            key_size=2048
-        )
-        
+        private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+
         # Serialize to PEM format
         key_pem = private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.PKCS8,
             encryption_algorithm=serialization.NoEncryption(),
         )
-        
+
         # Save to database and get the kid
         kid = database.save_key(key_pem, int(expires_at.timestamp()))
-        
-        return KeyPair(
-            kid=str(kid),
-            private_key=private_key,
-            expires_at=expires_at
-        )
 
-    def _load_keypair_from_db(
-        self, kid: int, key_pem: bytes, exp: int
-    ) -> KeyPair:
+        return KeyPair(kid=str(kid), private_key=private_key, expires_at=expires_at)
+
+    def _load_keypair_from_db(self, kid: int, key_pem: bytes, exp: int) -> KeyPair:
         """Deserialize a keypair from database storage."""
-        private_key = serialization.load_pem_private_key(
-            key_pem,
-            password=None
-        )
+        private_key = serialization.load_pem_private_key(key_pem, password=None)
         return KeyPair(
             kid=str(kid),
             private_key=private_key,
-            expires_at=datetime.fromtimestamp(exp, tz=timezone.utc)
+            expires_at=datetime.fromtimestamp(exp, tz=timezone.utc),
         )
 
     def get_active_keys(self, *, at: Optional[datetime] = None) -> List[KeyPair]:
@@ -138,11 +122,11 @@ class KeyStore:
             kid_int = int(kid)
         except ValueError:
             return None
-        
+
         row = database.get_key_by_kid(kid_int)
         if row is None:
             return None
-        
+
         return self._load_keypair_from_db(row[0], row[1], row[2])
 
 

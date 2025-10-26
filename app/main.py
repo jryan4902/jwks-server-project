@@ -1,9 +1,9 @@
-'''
+"""
 Jake Gonzales 
 Sep 19
 Assisted with copilot
 
-'''
+"""
 
 from __future__ import annotations
 
@@ -30,28 +30,24 @@ def jwks() -> Dict[str, List[Dict[str, str]]]:
     Creates a JWKS response from those private keys.
     """
     keys = keystore.get_active_keys()
-    jwks_keys = [
-        public_key_to_jwk(k.public_key, k.kid, alg=ALGORITHM) for k in keys
-    ]
+    jwks_keys = [public_key_to_jwk(k.public_key, k.kid, alg=ALGORITHM) for k in keys]
     return {"keys": jwks_keys}
 
+
 @app.post("/auth")
-async def auth(
-    request: Request,
-    expired: Optional[str] = Query(default=None)
-) -> JSONResponse:
+async def auth(request: Request, expired: Optional[str] = Query(default=None)) -> JSONResponse:
     """
     POST:/auth
     Reads a private key from the DB.
     If the "expired" query parameter is not present, read a valid (unexpired) key.
     If the "expired" query parameter is present, read an expired key.
     Sign a JWT with that private key and return the JWT.
-    
+
     Accepts:
     - Empty POST (for backward compatibility)
     - JSON payload: {"username": "userABC", "password": "password123"}
     - HTTP Basic Auth
-    
+
     NOTE: This is mock authentication - no actual validation occurs.
     """
     # Try to read JSON body if present (ignore if empty or invalid)
@@ -60,14 +56,12 @@ async def auth(
         username = body.get("username", "demo-user")
     except Exception:
         username = "demo-user"
-    
+
     # If the 'expired' query parameter is present, use an expired key
     use_expired = expired is not None
 
     keypair: KeyPair = (
-        keystore.get_latest_expired_key()
-        if use_expired
-        else keystore.get_latest_active_key()
+        keystore.get_latest_expired_key() if use_expired else keystore.get_latest_active_key()
     )
 
     now = datetime.now(timezone.utc)
